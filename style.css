@@ -1,0 +1,29 @@
+/* style.css */
+*{ box-sizing:border-box; }
+
+.tabuleiro{
+  display:grid;
+  grid-template-columns: repeat(7,40px);
+  grid-auto-rows:40px;
+  gap:4px;
+}
+
+.casa{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:lightpink;
+  cursor:pointer;
+}
+
+.casa[data-ocupado="true"]{
+  background:radial-gradient(circle at top, purple, pink);
+}
+
+.casa[data-selecionado="true"]{
+  outline: 3px solid yellow;
+}
+
+.casa[data-valida="false"]{
+  visibility: hidden;
+}
