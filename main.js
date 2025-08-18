@@ -1,45 +1,52 @@
+import { getSelecionado, getTabuleiro, selecionado } from "./restaUm.js";
+import { verificaVitoria } from "./vitoria.js";
 
-//main.js
-import { getTabuleiro, getSelecionado, seleciona } from "./restaUm";
-import {verificarVitoria} from "./disco";
+const eH1 = document.querySelector("h1");
+eH1.textContent = "Resta Um";
 
 const eTabuleiro = criaTabuleiro();
 document.body.append(eTabuleiro);
-atualizaTabuleiro();
 
-function criaTabuleiro() {
-    const div = document.createElement("div");
-    div.classList.add("tabuleiro");
-    return div;
-}   
+atualizaTabuleiro();
 
 function atualizaTabuleiro() {
     eTabuleiro.innerHTML = "";
     const tab = getTabuleiro();
-    for(let i=0; i<tab.length ;i++)
-    {
-        const casaInfo = tab[i];
-        const div = document.createElement("div");
-        div.classList.add("casa");
+    for (let i = 0; i < tab.length; i++) {
+        const disco = criaDisco(tab[i], i);
+        eTabuleiro.append(disco);
 
-        div.dataset.posicao = i;
-        div.dataset.valida  = casaInfo.valida;
-        if(casaInfo.ocupado){
-            div.dataset.ocupado = true;
-    }
-    if(getSelecionado() === i){
-            div.dataset.selecionado = true;
+        if (getSelecionado() !== null && i === getSelecionado()) {
+            disco.classList.add("selecionado");
         }
-
-        div.addEventListener("click",(e)=>{
-            seleciona(Number(e.target.dataset.posicao));
-            atualizaTabuleiro();
-        });
-
-        eTabuleiro.append(div);
     }
 
-    if(verificaVitoria()){
+    if (verificaVitoria()) {
         setTimeout(() => alert("Parabéns! Você venceu!"), 10);
     }
+}
+
+function clickNoTabuleiro(evento) {
+    const target = evento.target;
+    if (target.dataset.posicao) {
+        const posicao = Number(target.dataset.posicao);
+        selecionado(posicao);
+        atualizaTabuleiro();
+    }
+}
+
+function criaTabuleiro() {
+    const div = document.createElement("div");
+    div.classList.add("tabuleiro");
+    div.addEventListener("click", clickNoTabuleiro);
+    return div;
+}
+
+function criaDisco(cor, posicao) {
+    const div = document.createElement("div");
+    div.classList.add("disco");
+    // Alteração importante aqui:
+    div.dataset.cor = cor === null ? 'nulo' : (cor === '' ? 'vazio' : cor);
+    div.dataset.posicao = posicao;
+    return div;
 }

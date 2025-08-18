@@ -1,8 +1,7 @@
-// vitoria.js
-import{ getTabuleiro } from "./restaUm";
+import { getTabuleiro } from "./restaUm.js";
 
-export function verificaVitoria(){
+export function verificaVitoria() {
     const tab = getTabuleiro();
-    const restantes = tab.filter(c => c.valida && c.ocupado);
-    return restantes.length === 1;
+    const pecas = tab.filter(p => p === 'preto'); // Filtra apenas as peças que existem
+    return pecas.length === 1;
 }

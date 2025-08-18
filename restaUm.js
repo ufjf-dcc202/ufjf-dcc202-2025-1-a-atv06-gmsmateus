@@ -1,81 +1,59 @@
-//restaUm <=> disco.js, so para ficar mais claro
-//criando o tabuleiro do jogo Resta Um, confesso que tive que usar IA para me ajudar a criar o tabuleiro inicial
-const inicial=[
-    -1,-1, 1, 1, 1,-1,-1,
-    -1,-1, 1, 1, 1,-1,-1,
-     1, 1, 1, 1, 1, 1, 1,
-     1, 1, 1, 0, 1, 1, 1,
-     1, 1, 1, 1, 1, 1, 1,
-     -1,-1, 1, 1, 1,-1,-1,
-     -1,-1, 1, 1, 1,-1,-1
-]; //aqui é o tabuleiro inicial, com -1=espaço vazio, 0=disco vazio e 1=disco cheio
+const tabuleiro = [
+    null, null, 'preto', 'preto', 'preto', null, null,
+    null, null, 'preto', 'preto', 'preto', null, null,
+    'preto', 'preto', 'preto', 'preto', 'preto', 'preto', 'preto',
+    'preto', 'preto', 'preto', '', 'preto', 'preto', 'preto',
+    'preto', 'preto', 'preto', 'preto', 'preto', 'preto', 'preto',
+    null, null, 'preto', 'preto', 'preto', null, null,
+    null, null, 'preto', 'preto', 'preto', null, null,
+];
 
-let tabuleiro= inicial.map(v=>({
-    valida: v!==-1,
-    ocupado: v===1,
-}));
+let seleciona = null;
 
-let selecionado = null; 
 export function getTabuleiro() {
-    return tabuleiro;
+    return [...tabuleiro];
 }
 
 export function getSelecionado() {
-    return selecionado;
+    return seleciona;
 }
 
-export function setSelecionado(pos) 
-{
-    const casa = tabuleiro[pos];
-    if(!casa.valida) return;
-    if(selecionado === null) 
-        {
-        if(casa.ocupado) 
-            {
-            selecionado = pos;
-        }
+export function selecionado(posicao) {
+    if (seleciona === null && tabuleiro[posicao] === 'preto') {
+        seleciona = posicao;
     }
-    else
-        {
-        if(selecionado === pos) {
-            selecionado = null;
-        }
-        else
-        {
-            mover(selecionado, pos);
-            selecionado = null;
-        }
+    else if (seleciona === posicao) {
+        seleciona = null;
+    }
+    else if (seleciona !== null) {
+        mover(seleciona, posicao);
+        seleciona = null;
     }
 }
 
-//Aqui também precisei de ajuda da IA para criar a lógica de movimentação do disco, não tinha consguido pensar nisso sozinho
-//Peço desculpas se não podia usar IA, mas realmente não consegui pensar em como fazer a movimentação do disco
 function mover(origem, destino) {
-    const casaOrigem = tabuleiro[origem];
-    const destinoCasa = tabuleiro[destino];
-
-    if(!casaOrigem.ocupado || !destinoCasa.ocupado) 
+    if (tabuleiro[origem] !== 'preto' || tabuleiro[destino] !== '') {
         return;
-
-    const dx = (destino % 7) - (origem % 7);
-    const dy = Math.floor(destino / 7) - Math.floor(origem / 7);
-
-    //movimentação horizontal
-    if(dy === 0 && Math.abs(dx) === 2) {
-        const meio = origem + dx / 2;
-        if(tabuleiro[meio].ocupado) {
-            tabuleiro[origem].ocupado = false;
-            tabuleiro[meio].ocupado = false;
-            tabuleiro[destino].ocupado = true;
-        }
     }
-    //movimentação vertical
-    if(dx === 0 && Math.abs(dy) === 2) {
-        const meio = origem + dy / 2 * 7;
-        if(tabuleiro[meio].ocupado) {
-            tabuleiro[origem].ocupado = false;
-            tabuleiro[meio].ocupado = false;
-            tabuleiro[destino].ocupado = true;
+    const linhaOrigem = Math.floor(origem / 7);
+    const colOrigem = origem % 7;
+    const linhaDestino = Math.floor(destino / 7);
+    const colDestino = destino % 7;
+
+    const dLinha = Math.abs(linhaDestino - linhaOrigem);
+    const dCol = Math.abs(colDestino - colOrigem);
+
+    if ((dLinha === 2 && dCol === 0) || (dLinha === 0 && dCol === 2)) {
+        let meio;
+        if (dLinha === 2) { 
+            meio = origem + (linhaDestino > linhaOrigem ? 7 : -7);
+        } else { 
+            meio = origem + (colDestino > colOrigem ? 1 : -1);
+        }
+        if (tabuleiro[meio] === 'preto') {
+            tabuleiro[destino] = tabuleiro[origem];
+            tabuleiro[origem] = '';
+            tabuleiro[meio] = '';
         }
     }
 }
