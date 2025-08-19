@@ -8,6 +8,12 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 2rem;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 2rem;
 }
 
 .tabuleiro {
@@ -26,27 +32,32 @@ body {
     border-radius: 50%;
     cursor: pointer;
     border: 1px solid transparent;
+    transition: transform 0.2s;
+}
+
+.disco:hover {
+    transform: scale(1.05);
 }
 
 .disco[data-cor="preto"] {
-    background: radial-gradient(circle at top, white, black);
+    background: radial-gradient(circle at top, purple, pink);
     border: 1px solid white;
 }
 
 .disco[data-cor="nulo"] {
     background: transparent;
     cursor: default;
-    pointer-events: none;
     border: none;
 }
 
 .disco[data-cor="vazio"] {
-    background: transparent;
+    background: lightpink;
     cursor: pointer;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border: 1px dashed white;
 }
 
 .disco.selecionado {
-    outline: 3px solid yellow;
+    outline: 3px solid blueviolet;
+    transform: scale(1.1);
+    z-index: 1;
 }

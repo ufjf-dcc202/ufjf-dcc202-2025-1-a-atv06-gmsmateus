@@ -2,7 +2,7 @@ const tabuleiro = [
     null, null, 'preto', 'preto', 'preto', null, null,
     null, null, 'preto', 'preto', 'preto', null, null,
     'preto', 'preto', 'preto', 'preto', 'preto', 'preto', 'preto',
-    'preto', 'preto', 'preto', '', 'preto', 'preto', 'preto',
+    'preto', 'preto', 'preto', 'vazio', 'preto', 'preto', 'preto',
     'preto', 'preto', 'preto', 'preto', 'preto', 'preto', 'preto',
     null, null, 'preto', 'preto', 'preto', null, null,
     null, null, 'preto', 'preto', 'preto', null, null,
@@ -32,9 +32,10 @@ export function selecionado(posicao) {
 }
 
 function mover(origem, destino) {
-    if (tabuleiro[origem] !== 'preto' || tabuleiro[destino] !== '') {
+    if (tabuleiro[origem] !== 'preto' || tabuleiro[destino] !== 'vazio') {
         return;
     }
+
     const linhaOrigem = Math.floor(origem / 7);
     const colOrigem = origem % 7;
     const linhaDestino = Math.floor(destino / 7);
@@ -43,17 +44,22 @@ function mover(origem, destino) {
     const dLinha = Math.abs(linhaDestino - linhaOrigem);
     const dCol = Math.abs(colDestino - colOrigem);
 
+    // Verifica se é um movimento válido (horizontal ou vertical)
     if ((dLinha === 2 && dCol === 0) || (dLinha === 0 && dCol === 2)) {
         let meio;
-        if (dLinha === 2) { 
-            meio = origem + (linhaDestino > linhaOrigem ? 7 : -7);
-        } else { 
-            meio = origem + (colDestino > colOrigem ? 1 : -1);
+        if (dLinha === 2) {
+            meio = origem + (linhaDestino > linhaOrigem ? 14 : -14);
+        } else {
+            meio = origem + (colDestino > colOrigem ? 2 : -2);
         }
+
+        // Verifica se há uma peça no meio para pular
         if (tabuleiro[meio] === 'preto') {
-            tabuleiro[destino] = tabuleiro[origem];
-            tabuleiro[origem] = '';
-            tabuleiro[meio] = '';
+            tabuleiro[destino] = 'preto';
+            tabuleiro[origem] = 'vazio';
+            tabuleiro[meio] = 'vazio';
+            return true;
         }
     }
+    return false;
 }

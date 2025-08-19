@@ -45,8 +45,15 @@ function criaTabuleiro() {
 function criaDisco(cor, posicao) {
     const div = document.createElement("div");
     div.classList.add("disco");
-    // Alteração importante aqui:
-    div.dataset.cor = cor === null ? 'nulo' : (cor === '' ? 'vazio' : cor);
     div.dataset.posicao = posicao;
+    
+    if (cor === null) {
+        div.dataset.cor = "nulo";
+    } else if (cor === "vazio") {
+        div.dataset.cor = "vazio";
+    } else {
+        div.dataset.cor = cor; // "preto"
+    }
+    
     return div;
 }
